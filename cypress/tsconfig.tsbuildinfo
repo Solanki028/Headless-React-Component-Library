@@ -1,0 +1,1 @@
+{"root":["./support/commands.ts","./support/component.ts","./component/accordion.cy.tsx","./component/dialog.cy.tsx","./component/dropdown.cy.tsx","./component/tabs.cy.tsx"],"version":"5.9.3"}
