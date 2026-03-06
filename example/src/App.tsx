@@ -6,7 +6,7 @@ function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const dialogTriggerRef = useRef<HTMLButtonElement>(null)
 
-  // Example of using forwardRef: focusing the trigger on page load (optional)
+
   useEffect(() => {
     console.log('Dialog trigger ref:', dialogTriggerRef.current)
   }, [])
@@ -24,7 +24,7 @@ function App() {
         </header>
 
         <section className="grid gap-8 md:grid-cols-2">
-          {/* Dialog Section */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-shadow hover:shadow-md">
             <h2 className="mb-4 text-xl font-bold text-slate-900 text-center">Dialog</h2>
             <div className="flex justify-center">
@@ -59,7 +59,7 @@ function App() {
             </div>
           </div>
 
-          {/* Dropdown Section */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-shadow hover:shadow-md">
             <h2 className="mb-4 text-xl font-bold text-slate-900 text-center">Dropdown Menu</h2>
             <div className="flex justify-center">
@@ -88,7 +88,7 @@ function App() {
         </section>
 
         <section className="grid gap-8 md:grid-cols-2">
-          {/* Tabs Section */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
             <h2 className="mb-4 text-xl font-bold text-slate-900">Tabs</h2>
             <Tabs defaultValue="overview" className="w-full">
@@ -119,7 +119,7 @@ function App() {
             </Tabs>
           </div>
 
-          {/* Accordion Section */}
+
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-900/5">
             <h2 className="mb-4 text-xl font-bold text-slate-900">Accordion</h2>
             <Accordion type="single" collapsible className="space-y-3">

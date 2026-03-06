@@ -12,7 +12,7 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
 
         const composedRefs = useComposedRefs(forwardedRef, contentRef);
 
-        /* ESCAPE KEY CLOSE */
+
         React.useEffect(() => {
             if (!open) return;
 
@@ -25,7 +25,7 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
             return () => document.removeEventListener("keydown", handleEscape);
         }, [open, setOpen]);
 
-        /* FOCUS MANAGEMENT */
+
         React.useEffect(() => {
             if (!open) return;
 

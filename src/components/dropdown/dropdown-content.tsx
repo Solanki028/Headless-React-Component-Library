@@ -15,7 +15,7 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
 
         const composedRefs = useComposedRefs(forwardedRef, contentRef);
 
-        // Position popover
+
         React.useLayoutEffect(() => {
             if (open && triggerRef.current) {
                 const rect = triggerRef.current.getBoundingClientRect();
@@ -26,7 +26,7 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
             }
         }, [open, triggerRef]);
 
-        // Close on click outside
+
         React.useEffect(() => {
             if (!open) return;
 
@@ -45,7 +45,7 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
             };
         }, [open, setOpen, triggerRef]);
 
-        // Keyboard navigation
+
         React.useEffect(() => {
             if (!open) return;
 

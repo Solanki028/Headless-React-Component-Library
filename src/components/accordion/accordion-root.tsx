@@ -37,7 +37,7 @@ export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
             [ref]
         );
 
-        // Normalize state to an array of strings whether single or multiple
+
         const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() => {
             if (props.type === "multiple") {
                 return props.defaultValue || [];
@@ -88,7 +88,7 @@ export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
             [isControlled, props, value]
         );
 
-        // Keyboard Navigation (Roving Focus)
+
         const handleKeyDown = React.useCallback(
             (event: React.KeyboardEvent<HTMLDivElement>) => {
                 const container = internalRef.current;
@@ -148,7 +148,7 @@ export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
             [value, handleItemOpen, handleItemClose, baseId]
         );
 
-        // Filter out accordion-specific props before spreading to the div
+
         const divProps = Object.fromEntries(
             Object.entries(restProps).filter(([key]) =>
                 !["type", "value", "defaultValue", "onValueChange", "collapsible", "onKeyDown"].includes(key)
