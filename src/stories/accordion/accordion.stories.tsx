@@ -155,3 +155,26 @@ export const ControlledAccordion: Story = {
         );
     },
 };
+export const AccessibilitySupport: Story = {
+    render: () => (
+        <div className="accordion-wrapper">
+            <h3>Accessibility Compliance</h3>
+            <p style={{ marginBottom: "16px", fontSize: "14px", color: "#666" }}>
+                1. Arrow keys move focus between triggers.<br />
+                2. Home/End move focus to first/last triggers.<br />
+                3. Space/Enter toggle the accordion state.<br />
+                4. ARIA attributes (expanded, controls) are correctly managed.
+            </p>
+            <Accordion type="single">
+                <Accordion.Item value="acc-1" className="accordion-item">
+                    <Accordion.Trigger className="accordion-trigger">Trigger 1</Accordion.Trigger>
+                    <Accordion.Content className="accordion-content">Content 1</Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item value="acc-2" className="accordion-item">
+                    <Accordion.Trigger className="accordion-trigger">Trigger 2</Accordion.Trigger>
+                    <Accordion.Content className="accordion-content">Content 2</Accordion.Content>
+                </Accordion.Item>
+            </Accordion>
+        </div>
+    ),
+};

@@ -1,5 +1,7 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dropdown } from "../../components/dropdown/dropdown";
+import "./dropdown-stories.css";
 
 const meta = {
     title: "Components/Dropdown",
@@ -84,4 +86,24 @@ export const EdgeCases: Story = {
             </Dropdown>
         </div>
     ),
+};
+export const Controlled: Story = {
+    render: function Render() {
+        const [open, setOpen] = React.useState(false);
+        return (
+            <div style={{ minHeight: "300px" }}>
+                <p style={{ marginBottom: "10px" }}>State: {open ? "Open" : "Closed"}</p>
+                <button onClick={() => setOpen(!open)}>Toggle State</button>
+                <Dropdown open={open} onOpenChange={setOpen}>
+                    <Dropdown.Trigger style={{ marginLeft: "10px", padding: "8px 16px" }}>
+                        Controlled Menu
+                    </Dropdown.Trigger>
+                    <Dropdown.Content>
+                        <Dropdown.Item>Option 1</Dropdown.Item>
+                        <Dropdown.Item>Option 2</Dropdown.Item>
+                    </Dropdown.Content>
+                </Dropdown>
+            </div>
+        );
+    },
 };

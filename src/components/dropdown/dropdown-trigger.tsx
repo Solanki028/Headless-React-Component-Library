@@ -13,7 +13,16 @@ export const DropdownTrigger = React.forwardRef<HTMLButtonElement, DropdownTrigg
         const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
             if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                if (!open) setOpen(true);
+                if (!open) {
+                    setOpen(true);
+                } else {
+                    // If already open, find the menu and focus first item
+                    const content = document.getElementById(`dropdown-${baseId}-content`);
+                    if (content) {
+                        const firstItem = content.querySelector<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])');
+                        firstItem?.focus();
+                    }
+                }
             }
             onKeyDown?.(e);
         };

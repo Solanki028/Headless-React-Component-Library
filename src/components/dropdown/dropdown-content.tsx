@@ -46,70 +46,71 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
         }, [open, setOpen, triggerRef]);
 
 
-        React.useEffect(() => {
-            if (!open) return;
+        // Keyboard navigation
+        const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === "Escape") {
+                setOpen(false);
+                triggerRef.current?.focus();
+                return;
+            }
 
             const content = contentRef.current;
             if (!content) return;
 
-            const getItems = () => Array.from(content.querySelectorAll<HTMLElement>('[role="menuitem"]:not([disabled])'));
-
-            const handleKeyDown = (e: KeyboardEvent) => {
-                if (e.key === "Escape") {
-                    setOpen(false);
-                    triggerRef.current?.focus();
-                    return;
-                }
-
-                const items = getItems();
-                if (items.length === 0) return;
-
-                const activeElement = document.activeElement as HTMLElement;
-                const currentIndex = items.indexOf(activeElement);
-
-                if (e.key === "ArrowDown") {
-                    e.preventDefault();
-                    const nextIndex = (currentIndex + 1) % items.length;
-                    items[nextIndex]?.focus();
-                } else if (e.key === "ArrowUp") {
-                    e.preventDefault();
-                    const prevIndex = (currentIndex - 1 + items.length) % items.length;
-                    items[prevIndex]?.focus();
-                } else if (e.key === "Home") {
-                    e.preventDefault();
-                    items[0]?.focus();
-                } else if (e.key === "End") {
-                    e.preventDefault();
-                    items[items.length - 1]?.focus();
-                } else if (e.key === "Tab") {
-                    e.preventDefault();
-                    setOpen(false);
-                } else if (/^[a-zA-Z0-9_-]$/.test(e.key)) {
-                    const query = (searchQueryRef.current + e.key).toLowerCase();
-                    searchQueryRef.current = query;
-
-                    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-                    searchTimeoutRef.current = setTimeout(() => {
-                        searchQueryRef.current = "";
-                    }, 500);
-
-                    const match = items.find(item => item.textContent?.toLowerCase().trim().startsWith(query));
-                    if (match) match.focus();
-                }
-            };
-
-            content.addEventListener("keydown", handleKeyDown);
-
+            const getItems = () => Array.from(content.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'));
             const items = getItems();
-            if (items.length > 0 && !items.includes(document.activeElement as HTMLElement)) {
-                items[0].focus();
-            }
+            if (items.length === 0) return;
 
-            return () => {
-                content.removeEventListener("keydown", handleKeyDown);
+            const activeElement = document.activeElement as HTMLElement;
+            const currentIndex = items.indexOf(activeElement);
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                const nextIndex = (currentIndex + 1) % items.length;
+                items[nextIndex]?.focus();
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                const prevIndex = (currentIndex - 1 + items.length) % items.length;
+                items[prevIndex]?.focus();
+            } else if (e.key === "Home") {
+                e.preventDefault();
+                items[0]?.focus();
+            } else if (e.key === "End") {
+                e.preventDefault();
+                items[items.length - 1]?.focus();
+            } else if (e.key === "Tab") {
+                e.preventDefault();
+                setOpen(false);
+                triggerRef.current?.focus();
+            } else if (e.key.length === 1 && /^[a-zA-Z0-9_-]$/.test(e.key)) {
+                const query = (searchQueryRef.current + e.key).toLowerCase();
+                searchQueryRef.current = query;
+
                 if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-            };
-        }, [open, setOpen, triggerRef]);
+                searchTimeoutRef.current = setTimeout(() => {
+                    searchQueryRef.current = "";
+                }, 500);
+
+                const match = items.find(item => item.textContent?.toLowerCase().trim().startsWith(query));
+                if (match) match.focus();
+            }
+        }, [setOpen, triggerRef]);
+
+        // Auto-focus first item on open
+        React.useEffect(() => {
+            if (open) {
+                const timer = setTimeout(() => {
+                    const content = contentRef.current;
+                    if (content) {
+                        const items = Array.from(content.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'));
+                        if (items.length > 0 && !items.includes(document.activeElement as HTMLElement)) {
+                            items[0].focus();
+                        }
+                    }
+                }, 50);
+                return () => clearTimeout(timer);
+            }
+        }, [open]);
 
         if (!open) return null;
 
@@ -118,7 +119,9 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
                 ref={composedRefs}
                 id={`dropdown-${baseId}-content`}
                 role="menu"
+                tabIndex={-1}
                 aria-labelledby={`dropdown-${baseId}-trigger`}
+                onKeyDown={handleKeyDown}
                 style={{
                     position: "absolute",
                     top: `${coords.top}px`,
@@ -132,6 +135,7 @@ export const DropdownContent = React.forwardRef<HTMLDivElement, DropdownContentP
                     display: "flex",
                     flexDirection: "column",
                     zIndex: 1000,
+                    outline: "none",
                     ...userStyle,
                 }}
                 {...props}
