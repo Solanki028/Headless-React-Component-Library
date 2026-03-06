@@ -21,7 +21,7 @@ export type AccordionProps = AccordionSingleProps | AccordionMultipleProps;
 
 export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
     (props, ref) => {
-        const { type, children, onKeyDown, ...restProps } = props;
+        const { children, ...restProps } = props;
         const baseId = React.useId();
         const internalRef = React.useRef<HTMLDivElement>(null);
 
@@ -75,7 +75,7 @@ export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
         const handleItemClose = React.useCallback(
             (itemValue: string) => {
                 if (props.type === "single") {
-                    if (props.collapsible) {
+                    if (props.type === "single" && props.collapsible) {
                         if (!isControlled) setUncontrolledValue([]);
                         props.onValueChange?.("");
                     }
@@ -148,14 +148,12 @@ export const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionProps>(
             [value, handleItemOpen, handleItemClose, baseId]
         );
 
-        // Strip discriminatory wrapper props from being applied to the div
-        const {
-            collapsible: _c,
-            defaultValue: _dv,
-            value: _v,
-            onValueChange: _ovc,
-            ...divProps
-        } = restProps as any;
+        // Filter out accordion-specific props before spreading to the div
+        const divProps = Object.fromEntries(
+            Object.entries(restProps).filter(([key]) =>
+                !["type", "value", "defaultValue", "onValueChange", "collapsible", "onKeyDown"].includes(key)
+            )
+        );
 
         return (
             <AccordionContext.Provider value={contextValue}>
