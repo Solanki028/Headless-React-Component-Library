@@ -4,7 +4,14 @@ import dts from "vite-plugin-dts"
 import path from "path"
 
 export default defineConfig({
-  plugins: [react(), dts()],
+  plugins: [
+    react(),
+    dts({
+      insertTypesEntry: true,
+      tsconfigPath: "./tsconfig.app.json",
+      rollupTypes: true,
+    }),
+  ],
 
   build: {
     lib: {
