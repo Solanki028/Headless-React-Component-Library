@@ -1,9 +1,18 @@
-import type { ReactNode } from "react";
+import * as React from "react";
+import { useDialogContext } from "./dialog-context";
 
-type DialogTitleProps = {
-  children: ReactNode;
-};
+export type DialogTitleProps = React.HTMLAttributes<HTMLHeadingElement>;
 
-export function DialogTitle({ children }: DialogTitleProps) {
-  return <h2>{children}</h2>;
-}
+export const DialogTitle = React.forwardRef<HTMLHeadingElement, DialogTitleProps>(
+  ({ children, ...props }, ref) => {
+    const { baseId } = useDialogContext();
+
+    return (
+      <h2 ref={ref} id={`dialog-${baseId}-title`} {...props}>
+        {children}
+      </h2>
+    );
+  }
+);
+
+DialogTitle.displayName = "Dialog.Title";

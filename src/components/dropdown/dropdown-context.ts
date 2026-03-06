@@ -1,16 +1,16 @@
-import { createContext, useContext } from "react";
-import type { RefObject } from "react";
+import * as React from "react";
 
-type DropdownContextType = {
+export type DropdownContextType = {
     open: boolean;
     setOpen: (value: boolean) => void;
-    triggerRef: RefObject<HTMLButtonElement | null>;
+    triggerRef: React.RefObject<HTMLButtonElement | null>;
+    baseId: string;
 };
 
-export const DropdownContext = createContext<DropdownContextType | null>(null);
+export const DropdownContext = React.createContext<DropdownContextType | null>(null);
 
 export function useDropdownContext() {
-    const context = useContext(DropdownContext);
+    const context = React.useContext(DropdownContext);
 
     if (!context) {
         throw new Error("Dropdown components must be used inside <Dropdown>");

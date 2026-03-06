@@ -1,18 +1,24 @@
-import type { ButtonHTMLAttributes } from "react";
+import * as React from "react";
 import { useDialogContext } from "./dialog-context";
 
-type DialogCloseProps = ButtonHTMLAttributes<HTMLButtonElement>;
+export type DialogCloseProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function DialogClose(props: DialogCloseProps) {
-  const { setOpen } = useDialogContext();
+export const DialogClose = React.forwardRef<HTMLButtonElement, DialogCloseProps>(
+  ({ onClick, ...props }, ref) => {
+    const { setOpen } = useDialogContext();
 
-  return (
-    <button
-      {...props}
-      onClick={(e) => {
-        props.onClick?.(e);
-        setOpen(false);
-      }}
-    />
-  );
-}
+    return (
+      <button
+        ref={ref}
+        type="button"
+        onClick={(e) => {
+          onClick?.(e);
+          setOpen(false);
+        }}
+        {...props}
+      />
+    );
+  }
+);
+
+DialogClose.displayName = "Dialog.Close";

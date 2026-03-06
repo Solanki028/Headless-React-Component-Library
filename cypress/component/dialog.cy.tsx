@@ -51,7 +51,8 @@ describe("Dialog Component", () => {
 
         cy.contains("Open").click();
 
-        cy.get('[role="dialog"]').click({ force: true });
+        // Click the backdrop (outer container)
+        cy.get('[role="presentation"]').click('topLeft', { force: true });
 
         cy.contains("Settings").should("not.exist");
     });

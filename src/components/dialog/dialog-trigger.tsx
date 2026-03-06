@@ -1,18 +1,31 @@
-import type { ButtonHTMLAttributes } from "react";
+import * as React from "react";
 import { useDialogContext } from "./dialog-context";
+import { useComposedRefs } from "../../utils/refs";
 
-type DialogTriggerProps = ButtonHTMLAttributes<HTMLButtonElement>;
+export type DialogTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function DialogTrigger(props: DialogTriggerProps) {
-  const { setOpen } = useDialogContext();
+export const DialogTrigger = React.forwardRef<HTMLButtonElement, DialogTriggerProps>(
+  ({ onClick, ...props }, forwardedRef) => {
+    const { open, setOpen, triggerRef, baseId } = useDialogContext();
 
-  return (
-    <button
-      {...props}
-      onClick={(e) => {
-        props.onClick?.(e);
-        setOpen(true);
-      }}
-    />
-  );
-}
+    const composedRefs = useComposedRefs(forwardedRef, triggerRef);
+
+    return (
+      <button
+        ref={composedRefs}
+        type="button"
+        id={`dialog-${baseId}-trigger`}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={open ? `dialog-${baseId}-content` : undefined}
+        onClick={(e) => {
+          onClick?.(e);
+          setOpen(true);
+        }}
+        {...props}
+      />
+    );
+  }
+);
+
+DialogTrigger.displayName = "Dialog.Trigger";

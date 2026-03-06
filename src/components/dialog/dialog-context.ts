@@ -1,8 +1,10 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, type RefObject } from "react";
 
 type DialogContextType = {
     open: boolean;
     setOpen: (value: boolean) => void;
+    triggerRef: RefObject<HTMLButtonElement | null>;
+    baseId: string;
 };
 
 export const DialogContext = createContext<DialogContextType | null>(null);

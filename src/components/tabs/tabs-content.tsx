@@ -3,15 +3,20 @@ import { useTabsContext } from "./use-tabs";
 
 export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
     value: string;
+    /**
+     * Used to force mounting when more control is needed.
+     * Useful when controlling animation with React animation libraries.
+     */
+    forceMount?: boolean;
 }
 
 export const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
-    ({ value, children, ...props }, ref) => {
+    ({ value, children, forceMount, ...props }, ref) => {
         const { value: contextValue, baseId } = useTabsContext();
 
         const isSelected = contextValue === value;
 
-        if (!isSelected) {
+        if (!isSelected && !forceMount) {
             return null;
         }
 
@@ -22,7 +27,8 @@ export const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
                 id={`tabs-${baseId}-content-${value}`}
                 aria-labelledby={`tabs-${baseId}-trigger-${value}`}
                 tabIndex={0}
-                data-state="active"
+                data-state={isSelected ? "active" : "inactive"}
+                hidden={!isSelected}
                 {...props}
             >
                 {children}

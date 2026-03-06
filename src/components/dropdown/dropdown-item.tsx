@@ -1,44 +1,58 @@
-import type { HTMLAttributes, KeyboardEvent, MouseEvent } from "react";
+import * as React from "react";
 import { useDropdownContext } from "./dropdown-context";
 
-type DropdownItemProps = HTMLAttributes<HTMLDivElement>;
+export interface DropdownItemProps extends React.HTMLAttributes<HTMLDivElement> {
+    disabled?: boolean;
+}
 
-export function DropdownItem(props: DropdownItemProps) {
-    const { setOpen, triggerRef } = useDropdownContext();
+export const DropdownItem = React.forwardRef<HTMLDivElement, DropdownItemProps>(
+    ({ onClick, onKeyDown, onMouseEnter, disabled, style, ...props }, ref) => {
+        const { setOpen, triggerRef } = useDropdownContext();
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            props.onClick?.(e as unknown as MouseEvent<HTMLDivElement>);
+        const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+            if (disabled) return;
+            onClick?.(e);
             setOpen(false);
             triggerRef.current?.focus();
-        }
-        props.onKeyDown?.(e);
-    };
+        };
 
-    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-        props.onClick?.(e);
-        setOpen(false);
-        triggerRef.current?.focus();
-    };
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (disabled) return;
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+                setOpen(false);
+                triggerRef.current?.focus();
+            }
+            onKeyDown?.(e);
+        };
 
-    return (
-        <div
-            {...props}
-            role="menuitem"
-            tabIndex={-1}
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            style={{
-                cursor: "pointer",
-                padding: "8px 12px",
-                outline: "none",
-                ...props.style,
-            }}
-            onMouseEnter={(e) => {
-                (e.target as HTMLElement).focus();
-                props.onMouseEnter?.(e);
-            }}
-        />
-    );
-}
+        const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+            if (disabled) return;
+            (e.currentTarget as HTMLElement).focus();
+            onMouseEnter?.(e);
+        };
+
+        return (
+            <div
+                ref={ref}
+                role="menuitem"
+                tabIndex={disabled ? undefined : -1}
+                aria-disabled={disabled}
+                onClick={handleClick}
+                onKeyDown={handleKeyDown}
+                onMouseEnter={handleMouseEnter}
+                style={{
+                    cursor: disabled ? "not-allowed" : "pointer",
+                    padding: "8px 12px",
+                    outline: "none",
+                    opacity: disabled ? 0.5 : 1,
+                    ...style,
+                }}
+                {...props}
+            />
+        );
+    }
+);
+
+DropdownItem.displayName = "Dropdown.Item";

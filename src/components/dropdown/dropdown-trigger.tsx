@@ -1,30 +1,40 @@
-import type { ButtonHTMLAttributes, KeyboardEvent } from "react";
+import * as React from "react";
 import { useDropdownContext } from "./dropdown-context";
+import { useComposedRefs } from "../../utils/refs";
 
-type DropdownTriggerProps = ButtonHTMLAttributes<HTMLButtonElement>;
+export type DropdownTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function DropdownTrigger(props: DropdownTriggerProps) {
-    const { open, setOpen, triggerRef } = useDropdownContext();
+export const DropdownTrigger = React.forwardRef<HTMLButtonElement, DropdownTriggerProps>(
+    ({ onClick, onKeyDown, ...props }, forwardedRef) => {
+        const { open, setOpen, triggerRef, baseId } = useDropdownContext();
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-        if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            if (!open) setOpen(true);
-        }
-        props.onKeyDown?.(e);
-    };
+        const composedRefs = useComposedRefs(forwardedRef, triggerRef);
 
-    return (
-        <button
-            {...props}
-            ref={triggerRef}
-            aria-haspopup="menu"
-            aria-expanded={open}
-            onClick={(e) => {
-                props.onClick?.(e);
-                setOpen(!open);
-            }}
-            onKeyDown={handleKeyDown}
-        />
-    );
-}
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+            if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                if (!open) setOpen(true);
+            }
+            onKeyDown?.(e);
+        };
+
+        return (
+            <button
+                ref={composedRefs}
+                type="button"
+                id={`dropdown-${baseId}-trigger`}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                aria-controls={open ? `dropdown-${baseId}-content` : undefined}
+                onClick={(e) => {
+                    onClick?.(e);
+                    setOpen(!open);
+                }}
+                onKeyDown={handleKeyDown}
+                {...props}
+            />
+        );
+    }
+);
+
+DropdownTrigger.displayName = "Dropdown.Trigger";
