@@ -48,6 +48,15 @@ function App() {
 
 ## Development and Testing
 
+### Example Application
+
+I have included a live example dashboard that uses all components in a real-world scenario (styled with Tailwind CSS).
+
+To run the example app:
+1.  Navigate to the example directory: `cd example`
+2.  Install dependencies: `npm install`
+3.  Start the development server: `npm run dev`
+
 ### Storybook
 
 View component documentation and interact with variants:
