@@ -1,4 +1,4 @@
-# @priyanshu/headless-kit
+# @priyanshu1812/headless-kit
 
 A production-ready headless React component library focused on accessibility, composability, and developer experience.
 
@@ -26,7 +26,7 @@ npm install @priyanshu1812/headless-kit
 ## Usage Example (Tailwind CSS)
 
 ```tsx
-import { Dialog } from "@priyanshu/headless-kit";
+import { Dialog } from "@priyanshu1812/headless-kit";
 
 function App() {
   return (
