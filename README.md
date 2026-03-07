@@ -20,7 +20,7 @@ A production-ready headless React component library focused on accessibility, co
 ## Installation
 
 ```bash
-npm install @priyanshu/headless-kit
+npm install @priyanshu1812/headless-kit
 ```
 
 ## Usage Example (Tailwind CSS)
